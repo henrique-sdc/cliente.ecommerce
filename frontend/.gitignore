@@ -37,3 +37,4 @@ next-env.d.ts
 # eu adicionei
 /produtos
 /public/produtos
+.env
