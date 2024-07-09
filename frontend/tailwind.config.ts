@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss"
-import { fontFamily } from "tailwindcss/defaultTheme"
+import { fontFamily } from "tailwindcss/defaultTheme" //importar fonte
 
 const config = {
   darkMode: ["class"],
@@ -19,7 +19,7 @@ const config = {
       },
     },
     extend: {
-      fontFamily: {
+      fontFamily: { //fonte do site
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       colors: {

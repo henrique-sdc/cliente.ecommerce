@@ -4,15 +4,15 @@ import { formatCurrency, formatNumber } from "@/lib/formatters";
 
 // função para pegar a quantidade de vendas e o valor total de vendas
 async function getSalesData() {
-    const data = await db?.order.aggregate({
-        _sum: { pricePaidInCents: true },
-        _count: true
+    const data = await db.order.aggregate({ // função agregada
+        _sum: { pricePaidInCents: true }, // soma o valor total de vendas
+        _count: true // conta a quantidade de vendas
     })
     //await wait(2000) //função para testar tela de carregamento
 
     return {
-       amount: (data._sum.pricePaidInCents || 0) / 100,
-       numberOfSales: data._count
+       amount: (data._sum.pricePaidInCents || 0) / 100, // retorno o valor total de vendas, se não tiver nenhum valor, retorno 0, e divido por 100 para transformar em reais
+       numberOfSales: data._count // retorno a quantidade de vendas
     }
 }
 
@@ -26,7 +26,7 @@ async function getUserData() {
     // faço isso para o site ficar mais rápido, pois a funçao de baixo tem que esperar um por vez para carregar, essa carrega os dois juntos
     const [userCount, orderData] = await Promise.all([
         db.user.count(), db.order.aggregate({
-            _sum: { pricePaidInCents: true } 
+            _sum: { pricePaidInCents: true } // soma o valor total de vendas
           }),
     ])
     // funcao lenta
@@ -36,7 +36,7 @@ async function getUserData() {
     // })
 
     return {
-       userCount, 
+       userCount, // retorno a quantidade de usuários
        // fiz um if se for 0 para não ter divisão por 0, se não for 0, faço a divisão, o orderData._sum.pricePaidInCents é o valor total de vendas, o 0 é o valor padrão caso não tenha vendas e o userCount é a quantidade de usuários e o / 100 é para transformar em reais
        avaregeValuePerUser: userCount === 0 ? 0 : (orderData._sum.pricePaidInCents || 0) / userCount / 100,
     }
@@ -56,9 +56,10 @@ async function getProductData() {
     return { activeCount, inactiveCount } // retorno a quantidade de produtos disponíveis e indisponíveis para compra
 }
 
+// Página de Dashboard do Admin
 export default async function AdminDashboard() {
     // faço isso para o site ficar mais rápido, pois a funçao de baixo tem que esperar um por vez para carregar, essa carrega os dois juntos
-    const [salesData, userData, productData] = await Promise.all([ //delcaro os nomes para usar as funções que criei acima
+    const [salesData, userData, productData] = await Promise.all([ //declaro os nomes para usar as funções que criei acima
         getSalesData(), //chamo a função que criei acima
         getUserData(), //chamo a função que criei acima
         getProductData() //chamo a função que criei acima
@@ -71,7 +72,7 @@ export default async function AdminDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <DashboardCard
                 title="Vendas"
-                subtitle={`${formatNumber(salesData.numberOfSales)} Vendas`}
+                subtitle={`${formatNumber(salesData.numberOfSales)} Vendas`} // dado dinâmico vindo do banco e formatado pelo arquivo que criei
                 body={formatCurrency(salesData.amount)}
             />
             <DashboardCard
@@ -88,12 +89,14 @@ export default async function AdminDashboard() {
     )
 }
 
+// Tipagem do card
 type DashboardCardProps = {
     title: string;
     subtitle: string;
     body: string;
 }
 
+// Componente customizado, para não ficar muito grande e repetitivo o código eu padronizei o card
 function DashboardCard({ title, subtitle, body }: DashboardCardProps) {
     return (
         <Card>

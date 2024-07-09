@@ -7,6 +7,7 @@ export default function AdminLayout({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
+    // Navbar do admin
     return <>
         <Nav>
             <NavLink href="/admin">Dashboard</NavLink>
