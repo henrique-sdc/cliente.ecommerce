@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isValid } from "zod";
 import { isValidPassword } from "./lib/isValidPassword";
 
 //página para validar se o usuário é admin
 export async function middleware(req: NextRequest) { //função para verificar se o usuário é admin
     if ((await isAuthenticaded(req)) === false) {//se o usuário não for admin
-        return new NextResponse("Unauthorized", {status: 401, 
+        return new NextResponse("Vaza daqui seu safado", {status: 401, 
             headers: {"WWW-Authenticate": "Basic"}}) //retorna uma mensagem de não autorizado
     }
 }
@@ -20,7 +19,7 @@ async function isAuthenticaded(req: NextRequest) {
     const [username, password] = Buffer.from(authHeader.split(" ")[1], "base64"). //pega o usuário e a senha do cabeçalho, eu pego o segundo item do array que é o usuário e a senha, e converto para base64 o dado estaria assim "basic edadadada"
     toString().split(":") // eu uso o : para separar o usuário e a senha, pois vai estar assim "username:password"
     //console.log(username, password) //eu faço um console.log para ver se está pegando o usuário e a senha
-    
+
     return username === process.env.ADMIN_USERNAME && await //se o usuário e a senha forem iguais ao que eu defini no .env, ele retorna verdadeiro
     isValidPassword(password, process.env.HASHED_ADMIN_PASSWORD as string) 
 

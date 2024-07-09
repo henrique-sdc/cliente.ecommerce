@@ -1,5 +1,5 @@
 export async function isValidPassword(password: string, hashedPassword: string) {
-   //console.log(await hashPassword(password))
+   //console.log(await hashPassword(password)) //eu faço um console.log para ver se a senha está sendo hasheada
     return await hashPassword(password) === hashedPassword //compara a senha com a senha hasheada
 }
 

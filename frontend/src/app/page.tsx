@@ -1,7 +1,5 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <h1>Oi</h1>
+    <h1>Página inicial do ecommerce</h1>
   );
 }
