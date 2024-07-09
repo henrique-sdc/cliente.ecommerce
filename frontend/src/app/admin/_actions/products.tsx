@@ -7,6 +7,7 @@ import { z } from "zod"
 import db from "@/db/db"
 import fs from "fs/promises"
 import { notFound, redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 
 const fileSchema = z.instanceof(File, { message: "Necessário"}) //schema para validar se é um arquivo, se não for, ele retorna a mensagem "Necessário"
@@ -47,6 +48,8 @@ export async function addProduct(prevState: unknown, formData: FormData) { // Fu
     },
 })
 
+    revalidatePath("/") //atualiza a página inicial por causo do cache
+    revalidatePath("/produtos") //atualiza a página de produtos por causo do cache
     redirect("/admin/produtos") //redireciona para a página de produtos
 }
 
@@ -92,6 +95,8 @@ export async function updateProduct(id: string, prevState: unknown, formData: Fo
     },
 })
 
+    revalidatePath("/") //atualiza a página inicial por causo do cache
+    revalidatePath("/produtos") //atualiza a página de produtos por causo do cache
     redirect("/admin/produtos") //redireciona para a página de produtos
 }
 
@@ -101,6 +106,9 @@ export async function toggleProductAvailability(id: string, isAvailableForPurcha
         where: { id },
         data: { isAvailableForPurchase }
     })
+
+    revalidatePath("/") //atualiza a página inicial por causo do cache
+    revalidatePath("/produtos") //atualiza a página de produtos por causo do cache
 }
 
 // Função para deletar um produto
@@ -110,4 +118,7 @@ export async function deleteProduct(id: string) {
 
     await fs.unlink(product.filePath) //deleta os arquivos relacionados ao produto
     await fs.unlink(`public${product.imagePath}`) //deleta os arquivos relacionados ao produto
+
+    revalidatePath("/") //atualiza a página inicial por causo do cache
+    revalidatePath("/produtos") //atualiza a página de produtos por causo do cache
 }
