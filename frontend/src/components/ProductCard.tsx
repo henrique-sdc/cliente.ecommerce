@@ -36,6 +36,7 @@ export function ProductCard({ id, name, priceInCents, description, imagePath }: 
     )
 }
 
+// componente que renderiza um card de produto com skeleton
 export function ProductCardSkeleton() {
     return (
       <Card className="overflow-hidden flex flex-col animate-pulse">
